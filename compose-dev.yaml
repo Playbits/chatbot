@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: api
+      target: dev-envs
+    container_name: chatbot_backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8500:8500
+    secrets:
+      - db-password
+    depends_on:
+      - db
+  frontend:
+    build:
+      context: view
+      target: dev-envs
+    container_name: chatbot_frontend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9500:9500
+    depends_on:
+      - backend
+  db:
+    build:
+      context: db
+    container_name: chatbot_database
+    hostname: chatbot
+    restart: always
+    secrets:
+      - db-password
+    ports:
+      - "5435:5432"
+    expose:
+      - 5435
+    volumes:
+      # - ./sqldump:/docker-entrypoint-initdb.d
+      - dbdata:/var/lib/postgresql/data
+    working_dir: /home
+    env_file: .env
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  dbdata:
+    driver: "local"
+secrets:
+  db-password:
+    file: db/password.txt
