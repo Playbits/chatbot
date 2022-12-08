@@ -1,30 +1,32 @@
 version: "3.8"
 
 services:
-  backend:
-    build:
-      context: api
-      target: dev-envs
-    container_name: chatbot_backend
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 8500:8500
-    secrets:
-      - db-password
-    depends_on:
-      - db
-  frontend:
-    build:
-      context: view
-      target: dev-envs
-    container_name: chatbot_frontend
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 9500:9500
-    depends_on:
-      - backend
+  # backend:
+  #   build:
+  #     context: api
+  #     target: dev-envs
+  #   container_name: chatbot_backend
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   ports:
+  #     - 8500:8500
+  #   secrets:
+  #     - db-password
+  #   depends_on:
+  #     - db
+  # frontend:
+  #   build:
+  #     context: view
+  #     target: dev-envs
+  #   container_name: chatbot_frontend
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /usr/src/app/node_modules
+  #     - /usr/src/app/.next
+  #   ports:
+  #     - 9500:9500
+  #   depends_on:
+  #     - backend
   db:
     build:
       context: db
